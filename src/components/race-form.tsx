@@ -12,7 +12,7 @@ export function RaceForm({ enabled }: RaceFormProps) {
         <p className="text-sm uppercase tracking-[0.3em] text-indigo-200">Plan ahead</p>
         <h3 className="text-2xl font-semibold text-white">Upcoming race</h3>
         <p className="text-sm text-white/70">
-          Keep race goals synced with the same OSC CouchDB instance for your team.
+          Keep race goals synced with the same CouchDB instance for your team.
         </p>
       </div>
       <form action={enabled ? addRace : undefined} className="space-y-4">
@@ -103,7 +103,7 @@ export function RaceForm({ enabled }: RaceFormProps) {
       </form>
       {!enabled && (
         <p className="mt-3 text-xs text-white/70">
-          Add your OSC CouchDB credentials in <code>.env.local</code> to make this form live.
+          Add your CouchDB credentials in <code>.env.local</code> to make this form live.
         </p>
       )}
     </div>

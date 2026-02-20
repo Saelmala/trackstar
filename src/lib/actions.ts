@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import { createRaceDoc, createRunDoc, type NewRace, type NewRun } from "./couchdb";
+import { requireSession } from "./session";
 
 export async function addRun(formData: FormData) {
+  requireSession();
   const payload = mapRunPayload(formData);
   if (!payload) {
     console.warn("Run payload missing required fields");
@@ -16,6 +18,7 @@ export async function addRun(formData: FormData) {
 }
 
 export async function addRace(formData: FormData) {
+  requireSession();
   const payload = mapRacePayload(formData);
   if (!payload) {
     console.warn("Race payload missing required fields");

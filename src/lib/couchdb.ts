@@ -27,6 +27,54 @@ const authHeader = couchConfigured
   ? `Basic ${Buffer.from(`${couchUser}:${couchPass}`, "utf-8").toString("base64")}`
   : undefined;
 
+type MangoIndexField = string | Record<string, "asc" | "desc">;
+
+type MangoIndexDefinition = {
+  name: string;
+  fields: MangoIndexField[];
+};
+
+const mangoIndexes: MangoIndexDefinition[] = [
+  {
+    name: "idx_runs_type_date_desc",
+    fields: [{ type: "desc" }, { date: "desc" }],
+  },
+  {
+    name: "idx_races_type_raceDate_asc",
+    fields: [{ type: "asc" }, { raceDate: "asc" }],
+  },
+];
+
+let ensuredIndexesPromise: Promise<void> | null = null;
+
+async function ensureIndexes() {
+  if (!couchConfigured || !couchDb) {
+    return;
+  }
+
+  if (!ensuredIndexesPromise) {
+    ensuredIndexesPromise = (async () => {
+      await Promise.all(
+        mangoIndexes.map((index) =>
+          couchFetch(`${couchDb}/_index`, {
+            method: "POST",
+            body: JSON.stringify({
+              name: index.name,
+              type: "json",
+              index: { fields: index.fields },
+            }),
+          })
+        )
+      );
+    })().catch((error) => {
+      ensuredIndexesPromise = null;
+      throw error;
+    });
+  }
+
+  return ensuredIndexesPromise;
+}
+
 async function couchFetch(path: string, init?: RequestInit) {
   if (!couchConfigured || !couchUrl) {
     throw new Error("CouchDB is not configured. Provide credentials in .env.local");
@@ -63,11 +111,13 @@ export async function getRuns(): Promise<Run[]> {
     return demoRuns;
   }
 
+  await ensureIndexes();
+
   const res = await couchFetch(`${couchDb}/_find`, {
     method: "POST",
     body: JSON.stringify({
       selector: { type: "run" },
-      sort: [{ date: "desc" }],
+      sort: [{ type: "desc" }, { date: "desc" }],
       limit: 100,
     }),
   });
@@ -80,11 +130,13 @@ export async function getRaces(): Promise<Race[]> {
     return demoRaces;
   }
 
+  await ensureIndexes();
+
   const res = await couchFetch(`${couchDb}/_find`, {
     method: "POST",
     body: JSON.stringify({
       selector: { type: "race" },
-      sort: [{ raceDate: "asc" }],
+      sort: [{ type: "asc" }, { raceDate: "asc" }],
       limit: 50,
     }),
   });

@@ -13,7 +13,7 @@ export function RunForm({ enabled }: RunFormProps) {
           <p className="text-sm uppercase tracking-[0.3em] text-emerald-200">Log a run</p>
           <h3 className="text-2xl font-semibold text-white">Capture the effort</h3>
           <p className="text-sm text-white/70">
-            Runs are persisted in your OSC CouchDB instance so you can sync data anywhere.
+            Runs are persisted in your CouchDB instance so you can sync data anywhere.
           </p>
         </div>
         <span
@@ -21,7 +21,7 @@ export function RunForm({ enabled }: RunFormProps) {
             enabled ? "bg-emerald-400/20 text-emerald-200" : "bg-orange-500/10 text-orange-200"
           }`}
         >
-          {enabled ? "Live OSC data" : "Demo mode"}
+          {enabled ? "Live CouchDB data" : "Demo mode"}
         </span>
       </div>
       <form action={enabled ? addRun : undefined} className="space-y-4">
@@ -130,7 +130,7 @@ export function RunForm({ enabled }: RunFormProps) {
       </form>
       {!enabled && (
         <p className="mt-3 text-xs text-white/70">
-          Configure the OSC CouchDB credentials in <code>.env.local</code> to enable logging.
+          Configure the CouchDB credentials in <code>.env.local</code> to enable logging.
         </p>
       )}
     </div>

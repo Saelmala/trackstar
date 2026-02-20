@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Trackstar — Running & Race Planner",
   description:
-    "Trackstar is a Next.js dashboard for logging runs and upcoming races with data stored on Open Source Cloud CouchDB.",
+    "Trackstar is a Next.js dashboard for logging runs and upcoming races with data stored in CouchDB.",
 };
 
 export default function RootLayout({
