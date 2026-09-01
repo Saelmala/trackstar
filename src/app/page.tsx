@@ -3,19 +3,25 @@ import { RacesList } from "@/components/races-list";
 import { RunForm } from "@/components/run-form";
 import { RunsList } from "@/components/runs-list";
 import { StatsGrid } from "@/components/stats-grid";
-import { couchConfigured, getRaces, getRuns } from "@/lib/couchdb";
+import { StravaConnect } from "@/components/strava-connect";
+import { couchConfigured, getRaces, getRuns, getStravaConnection } from "@/lib/couchdb";
 import { logoutAction } from "@/lib/auth-actions";
 import { getSession } from "@/lib/session";
+import { stravaConfigured } from "@/lib/strava";
 import { buildRunStats } from "@/lib/stats";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const session = getSession();
+  const session = await getSession();
   if (!session) {
     redirect("/login");
   }
 
-  const [runs, races] = await Promise.all([getRuns(), getRaces()]);
+  const [runs, races, stravaConnection] = await Promise.all([
+    getRuns(),
+    getRaces(),
+    getStravaConnection(session.userId),
+  ]);
   const stats = buildRunStats(runs, races);
   const writerEnabled = couchConfigured;
   const userDisplayName = session.email ?? session.userId;
@@ -46,6 +52,7 @@ export default async function Home() {
               <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-300" />
               {writerEnabled ? "Live CouchDB connection" : "Demo data — connect CouchDB to go live"}
             </span>
+            <StravaConnect connection={stravaConnection} configured={stravaConfigured} />
             <form action={logoutAction}>
               <button
                 type="submit"

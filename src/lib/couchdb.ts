@@ -3,7 +3,7 @@ import "server-only";
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
 
-import type { NewRace, NewRun, Race, Run } from "./types";
+import type { NewRace, NewRun, Race, Run, StravaConnection } from "./types";
 
 type MangoResponse<T> = {
   docs: T[];
@@ -42,6 +42,14 @@ const mangoIndexes: MangoIndexDefinition[] = [
   {
     name: "idx_races_type_raceDate_asc",
     fields: [{ type: "asc" }, { raceDate: "asc" }],
+  },
+  {
+    name: "idx_stravaConnection_type_userId",
+    fields: [{ type: "asc" }, { userId: "asc" }],
+  },
+  {
+    name: "idx_runs_stravaActivityId",
+    fields: [{ stravaActivityId: "asc" }],
   },
 ];
 
@@ -149,14 +157,15 @@ export async function createRunDoc(payload: NewRun) {
     throw new Error("CouchDB is not configured for writes.");
   }
 
+  const id = `run:${randomUUID()}`;
   const doc: Run = {
-    _id: `run:${randomUUID()}`,
+    _id: id,
     type: "run",
     createdAt: new Date().toISOString(),
     ...payload,
   };
 
-  const res = await couchFetch(`${couchDb}/${encodeURIComponent(doc._id)}`, {
+  const res = await couchFetch(`${couchDb}/${encodeURIComponent(id)}`, {
     method: "PUT",
     body: JSON.stringify(doc),
   });
@@ -169,19 +178,96 @@ export async function createRaceDoc(payload: NewRace) {
     throw new Error("CouchDB is not configured for writes.");
   }
 
+  const id = `race:${randomUUID()}`;
   const doc: Race = {
-    _id: `race:${randomUUID()}`,
+    _id: id,
     type: "race",
     createdAt: new Date().toISOString(),
     ...payload,
   };
 
-  const res = await couchFetch(`${couchDb}/${encodeURIComponent(doc._id)}`, {
+  const res = await couchFetch(`${couchDb}/${encodeURIComponent(id)}`, {
     method: "PUT",
     body: JSON.stringify(doc),
   });
   const data: CouchPostResponse = await res.json();
   return data;
+}
+
+export async function getStravaConnection(userId: string): Promise<StravaConnection | null> {
+  if (!couchConfigured || !couchDb) {
+    return null;
+  }
+
+  await ensureIndexes();
+
+  const res = await couchFetch(`${couchDb}/_find`, {
+    method: "POST",
+    body: JSON.stringify({
+      selector: { type: "stravaConnection", userId },
+      limit: 1,
+    }),
+  });
+  const data: MangoResponse<StravaConnection> = await res.json();
+  return data.docs[0] ?? null;
+}
+
+export async function upsertStravaConnection(
+  connection: Omit<StravaConnection, "_id" | "_rev" | "type">
+) {
+  if (!couchConfigured || !couchDb) {
+    throw new Error("CouchDB is not configured for writes.");
+  }
+
+  const existing = await getStravaConnection(connection.userId);
+
+  const doc: StravaConnection = {
+    ...connection,
+    _id: existing?._id ?? `stravaConnection:${randomUUID()}`,
+    _rev: existing?._rev,
+    type: "stravaConnection",
+  };
+
+  const res = await couchFetch(`${couchDb}/${encodeURIComponent(doc._id!)}`, {
+    method: "PUT",
+    body: JSON.stringify(doc),
+  });
+  const data: CouchPostResponse = await res.json();
+  return data;
+}
+
+export async function deleteStravaConnection(userId: string) {
+  if (!couchConfigured || !couchDb) {
+    throw new Error("CouchDB is not configured for writes.");
+  }
+
+  const existing = await getStravaConnection(userId);
+  if (!existing?._id || !existing?._rev) {
+    return;
+  }
+
+  await couchFetch(
+    `${couchDb}/${encodeURIComponent(existing._id)}?rev=${encodeURIComponent(existing._rev)}`,
+    { method: "DELETE" }
+  );
+}
+
+export async function findRunByStravaActivityId(stravaActivityId: number): Promise<Run | null> {
+  if (!couchConfigured || !couchDb) {
+    return null;
+  }
+
+  await ensureIndexes();
+
+  const res = await couchFetch(`${couchDb}/_find`, {
+    method: "POST",
+    body: JSON.stringify({
+      selector: { type: "run", stravaActivityId },
+      limit: 1,
+    }),
+  });
+  const data: MangoResponse<Run> = await res.json();
+  return data.docs[0] ?? null;
 }
 
 const demoRuns: Run[] = [
