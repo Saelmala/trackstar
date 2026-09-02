@@ -39,7 +39,18 @@ export function RunsList({ runs }: RunsListProps) {
                 <p className="text-xs uppercase tracking-[0.3em] text-white/60">
                   {formatDate(run.date, { month: "long", day: "numeric" })}
                 </p>
-                <h3 className="text-xl font-semibold text-white">{run.route}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-semibold text-white">{run.route}</h3>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                      run.source === "strava"
+                        ? "bg-orange-500/10 text-orange-200"
+                        : "bg-white/10 text-white/50"
+                    }`}
+                  >
+                    {run.source === "strava" ? "via Strava" : "manual entry"}
+                  </span>
+                </div>
                 <p className="text-sm text-white/70">{run.terrain ?? "Mixed terrain"}</p>
               </div>
               <div className="text-right font-mono text-sm text-white">

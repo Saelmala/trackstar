@@ -58,10 +58,10 @@ function decodeSession(value: string): SessionData | null {
   }
 }
 
-function readSessionCookie(): string | null {
+async function readSessionCookie(): Promise<string | null> {
   try {
-    const store = cookies();
-    const rawCookie = typeof store?.get === "function" ? store.get(SESSION_COOKIE) : undefined;
+    const store = await cookies();
+    const rawCookie = store.get(SESSION_COOKIE);
     if (rawCookie?.value) {
       return rawCookie.value;
     }
@@ -70,16 +70,15 @@ function readSessionCookie(): string | null {
   }
 
   try {
-    const headerStore = headers();
-    const cookieHeader =
-      typeof headerStore?.get === "function" ? headerStore.get("cookie") : undefined;
+    const headerStore = await headers();
+    const cookieHeader = headerStore.get("cookie");
     if (!cookieHeader) {
       return null;
     }
     const match = cookieHeader
       .split(";")
-      .map((part) => part.trim())
-      .find((part) => part.startsWith(`${SESSION_COOKIE}=`));
+      .map((part: string) => part.trim())
+      .find((part: string) => part.startsWith(`${SESSION_COOKIE}=`));
     if (!match) {
       return null;
     }
@@ -90,8 +89,8 @@ function readSessionCookie(): string | null {
   }
 }
 
-export function getSession(): SessionData | null {
-  const rawValue = readSessionCookie();
+export async function getSession(): Promise<SessionData | null> {
+  const rawValue = await readSessionCookie();
   if (!rawValue) {
     return null;
   }
@@ -103,22 +102,23 @@ export function getSession(): SessionData | null {
   }
 }
 
-export function requireSession(): SessionData {
-  const session = getSession();
+export async function requireSession(): Promise<SessionData> {
+  const session = await getSession();
   if (!session) {
     throw new Error("User is not authenticated.");
   }
   return session;
 }
 
-export function createSession(payload: { userId: string; email?: string; token?: string }) {
+export async function createSession(payload: { userId: string; email?: string; token?: string }) {
   const session: SessionData = {
     sessionId: randomUUID(),
     issuedAt: Date.now(),
     ...payload,
   };
 
-  cookies().set(SESSION_COOKIE, encodeSession(session), {
+  const store = await cookies();
+  store.set(SESSION_COOKIE, encodeSession(session), {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -129,6 +129,7 @@ export function createSession(payload: { userId: string; email?: string; token?:
   return session;
 }
 
-export function clearSession() {
-  cookies().delete(SESSION_COOKIE);
+export async function clearSession() {
+  const store = await cookies();
+  store.delete(SESSION_COOKIE);
 }

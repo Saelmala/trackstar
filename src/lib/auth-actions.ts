@@ -25,7 +25,7 @@ export async function loginAction(
 
   try {
     const response = await passwordLogin({ identifier, password });
-    createSession({
+    await createSession({
       userId: response.userId ?? identifier,
       email: response.email ?? identifier,
       token: response.token ?? response.accessToken,
@@ -43,6 +43,6 @@ export async function loginAction(
 }
 
 export async function logoutAction() {
-  clearSession();
+  await clearSession();
   redirect("/login");
 }
