@@ -8,9 +8,10 @@ upcoming races, import activities from Strava, and keep all of it in a CouchDB
 database you control. Built with Next.js, React and Tailwind CSS, and protected
 by the OpenAuth Password service so only you can make changes.
 
-> **Status:** Trackstar is a spare-time project, developed on `main`. It works,
-> but it has no releases, no versioning guarantees and no automated tests yet.
-> Treat it as a starting point to build on rather than a finished product.
+> **Status:** Trackstar is a spare-time project, developed on `main`. It works
+> and the core logic is unit tested, but there are no releases and no versioning
+> guarantees. Treat it as a starting point to build on rather than a finished
+> product.
 
 ## Tech stack
 
@@ -118,6 +119,23 @@ src/lib/         CouchDB access, auth, session handling, Strava client
 | `npm run start` | Serve the production build |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript, no emit |
+| `npm test` | Run the unit tests once |
+| `npm run test:watch` | Run the unit tests in watch mode |
+
+## Tests
+
+Unit tests run on [Vitest](https://vitest.dev) and cover the pure logic: stats
+aggregation and formatting (`src/lib/stats.ts`), form parsing and validation
+(`src/lib/parse.ts`), and the Strava activity mapping and authorize URL
+(`src/lib/strava.ts`).
+
+```bash
+npm test
+```
+
+Tests live next to the code they cover as `*.test.ts`. There is no coverage yet
+for React components or for the CouchDB and OpenAuth clients, which need network
+or DOM fakes — contributions welcome.
 
 ## Ideas for extending it
 

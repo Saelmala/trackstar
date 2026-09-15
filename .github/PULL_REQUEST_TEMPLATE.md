@@ -13,7 +13,9 @@
 ## Checklist
 
 - [ ] `npm run lint` passes
-- [ ] `npx tsc --noEmit` passes
+- [ ] `npm run typecheck` passes
+- [ ] `npm test` passes
 - [ ] `npm run build` passes
+- [ ] Tests added or updated for logic changes
 - [ ] README updated if environment variables changed
 - [ ] No secrets, real hostnames, or credentials in the diff

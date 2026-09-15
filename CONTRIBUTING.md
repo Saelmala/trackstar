@@ -28,10 +28,13 @@ point it at a real CouchDB instance.
 Run the same checks CI runs:
 
 ```bash
-npm run lint && npx tsc --noEmit && npm run build
+npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-All three must pass. CI will run them again on your branch.
+All four must pass. CI will run them again on your branch.
+
+While working on a change, `npm run test:watch` reruns the affected tests as you
+edit.
 
 ## Pull requests
 
@@ -40,6 +43,23 @@ All three must pass. CI will run them again on your branch.
 - Update the README when you add or rename an environment variable.
 - Commit messages loosely follow [Conventional Commits](https://www.conventionalcommits.org)
   (`feat:`, `fix:`, `docs:`, `ci:`). This is a convention, not a gate.
+
+## Tests
+
+Unit tests use [Vitest](https://vitest.dev) and live beside the code they cover
+as `src/lib/*.test.ts`.
+
+Please add tests for pure logic — parsing, validation, formatting, data mapping.
+If a bug fix is testable, a test that fails before the fix is the best way to
+describe it.
+
+Keep testable logic out of modules marked `'use server'`: that directive limits a
+module to async exports, so helpers there cannot be imported by a test. This is
+why form parsing lives in `src/lib/parse.ts` rather than `src/lib/actions.ts`.
+
+Modules that import `server-only` have no Node resolution outside the Next.js
+bundler; `vitest.config.ts` aliases it to an empty stub so those modules can be
+imported in tests.
 
 ## Code style
 

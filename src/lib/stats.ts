@@ -67,14 +67,16 @@ export function formatPace(minutesPerKm: number | null) {
   if (!minutesPerKm || Number.isNaN(minutesPerKm)) {
     return "—";
   }
-  const wholeMinutes = Math.floor(minutesPerKm);
-  const seconds = Math.round((minutesPerKm - wholeMinutes) * 60);
+  const totalSeconds = Math.round(minutesPerKm * 60);
+  const wholeMinutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
   return `${wholeMinutes}:${seconds.toString().padStart(2, "0")} /km`;
 }
 
 export function formatDuration(minutes: number) {
-  const hours = Math.floor(minutes / 60);
-  const mins = Math.round(minutes % 60);
+  const totalMinutes = Math.round(minutes);
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
   if (!hours) {
     return `${mins}m`;
   }
