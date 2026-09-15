@@ -1,0 +1,62 @@
+name: Bug report
+description: Something in Trackstar is not working as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please do not include real credentials,
+        hostnames, or `.env.local` contents in this issue.
+
+        Found a security vulnerability? Do not file it here — follow
+        [SECURITY.md](../blob/main/SECURITY.md) instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: How are you running Trackstar?
+      options:
+        - Demo mode (no CouchDB configured)
+        - Connected to my own CouchDB
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        - OS: macOS 15
+        - Node: 22.x
+        - Browser: Firefox 140
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Console or terminal output. Redact any secrets first.
+      render: shell
+    validations:
+      required: false
