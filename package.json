@@ -1,0 +1,48 @@
+{
+  "name": "trackstar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Next.js dashboard for runners to log workouts, plan races, and import activities from Strava, backed by CouchDB.",
+  "keywords": [
+    "running",
+    "nextjs",
+    "couchdb",
+    "strava",
+    "training-log"
+  ],
+  "homepage": "https://github.com/Saelmala/trackstar#readme",
+  "bugs": {
+    "url": "https://github.com/Saelmala/trackstar/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saelmala/trackstar.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Sandra Larsson",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "20.19.43",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "5.9.3"
+  }
+}
