@@ -8,6 +8,8 @@ upcoming races, import activities from Strava, and keep all of it in a CouchDB
 database you control. Built with Next.js, React and Tailwind CSS, and protected
 by the OpenAuth Password service so only you can make changes.
 
+**Note**: This project was developed using Claude Code.
+
 > **Status:** Trackstar is a spare-time project, developed on `main`. It works
 > and the core logic is unit tested, but there are no releases and no versioning
 > guarantees. Treat it as a starting point to build on rather than a finished
