@@ -1,10 +1,7 @@
 # Contributing to Trackstar
 
 Thanks for taking an interest in Trackstar. Bug reports, ideas and pull requests
-are all welcome.
-
-By participating in this project you agree to abide by the
-[Code of Conduct](CODE_OF_CONDUCT.md).
+are all welcome. Please be respectful and assume good faith.
 
 ## Getting set up
 
@@ -77,9 +74,6 @@ rest. A few conventions worth knowing:
 
 Open an issue using the bug report template and include what you expected, what
 happened, and how to reproduce it.
-
-**Security problems are different** — please do not open a public issue. Follow
-[SECURITY.md](SECURITY.md) instead.
 
 ## Never commit secrets
 

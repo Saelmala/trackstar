@@ -8,9 +8,6 @@ body:
         Thanks for reporting a bug. Please do not include real credentials,
         hostnames, or `.env.local` contents in this issue.
 
-        Found a security vulnerability? Do not file it here — follow
-        [SECURITY.md](../blob/main/SECURITY.md) instead.
-
   - type: textarea
     id: what-happened
     attributes:

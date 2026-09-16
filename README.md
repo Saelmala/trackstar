@@ -46,19 +46,19 @@ variables below to switch it to your own database.
 Copy `.env.local.example` to `.env.local` and fill in the values. `.env.local`
 is gitignored — never commit it.
 
-| Variable | Required | Description |
-| -------- | -------- | ----------- |
-| `COUCHDB_URL` | for live data | Base URL of your CouchDB instance |
-| `COUCHDB_DB` | for live data | Database name (e.g. `trackstar`) |
-| `COUCHDB_USERNAME` | for live data | CouchDB user |
-| `COUCHDB_PASSWORD` | for live data | Password for that user |
-| `OPENAUTH_PASSWORD_URL` | for login | OpenAuth Password login endpoint |
-| `OPENAUTH_APP_ID` | for login | OpenAuth application ID |
-| `OPENAUTH_APP_SECRET` | for login | OpenAuth application secret |
-| `SESSION_SECRET` | for login | Long random string used to sign the session cookie |
-| `STRAVA_CLIENT_ID` | for Strava | From your Strava API application |
-| `STRAVA_CLIENT_SECRET` | for Strava | From your Strava API application |
-| `STRAVA_REDIRECT_URI` | for Strava | `http://localhost:3000/api/strava/callback` in development |
+| Variable                | Required      | Description                                                |
+| ----------------------- | ------------- | ---------------------------------------------------------- |
+| `COUCHDB_URL`           | for live data | Base URL of your CouchDB instance                          |
+| `COUCHDB_DB`            | for live data | Database name (e.g. `trackstar`)                           |
+| `COUCHDB_USERNAME`      | for live data | CouchDB user                                               |
+| `COUCHDB_PASSWORD`      | for live data | Password for that user                                     |
+| `OPENAUTH_PASSWORD_URL` | for login     | OpenAuth Password login endpoint                           |
+| `OPENAUTH_APP_ID`       | for login     | OpenAuth application ID                                    |
+| `OPENAUTH_APP_SECRET`   | for login     | OpenAuth application secret                                |
+| `SESSION_SECRET`        | for login     | Long random string used to sign the session cookie         |
+| `STRAVA_CLIENT_ID`      | for Strava    | From your Strava API application                           |
+| `STRAVA_CLIENT_SECRET`  | for Strava    | From your Strava API application                           |
+| `STRAVA_REDIRECT_URI`   | for Strava    | `http://localhost:3000/api/strava/callback` in development |
 
 > **Note:** If a value contains a `#`, wrap it in quotes so dotenv does not treat
 > everything after the `#` as a comment.
@@ -93,10 +93,10 @@ your `STRAVA_REDIRECT_URI`. Leave the Strava variables empty to hide the feature
 
 ## Data model
 
-| Document | Required fields | Notes |
-| -------- | --------------- | ----- |
-| `run` | `date`, `route`, `distanceKm`, `durationMinutes` | Optional metadata such as `terrain`, `effort`, `weather`, `notes`. |
-| `race` | `name`, `city`, `raceDate`, `distanceKm` | Optional `goalTime`, `website`, `notes`. |
+| Document | Required fields                                  | Notes                                                              |
+| -------- | ------------------------------------------------ | ------------------------------------------------------------------ |
+| `run`    | `date`, `route`, `distanceKm`, `durationMinutes` | Optional metadata such as `terrain`, `effort`, `weather`, `notes`. |
+| `race`   | `name`, `city`, `raceDate`, `distanceKm`         | Optional `goalTime`, `website`, `notes`.                           |
 
 Documents get deterministic `_id` prefixes (`run:` / `race:`) and a `type` field
 so Mango queries can filter efficiently.
@@ -111,15 +111,15 @@ src/lib/         CouchDB access, auth, session handling, Strava client
 
 ## Scripts
 
-| Command | Description |
-| ------- | ----------- |
-| `npm install` | Install dependencies |
-| `npm run dev` | Start the development server |
-| `npm run build` | Production build |
-| `npm run start` | Serve the production build |
-| `npm run lint` | ESLint |
-| `npm run typecheck` | TypeScript, no emit |
-| `npm test` | Run the unit tests once |
+| Command              | Description                      |
+| -------------------- | -------------------------------- |
+| `npm install`        | Install dependencies             |
+| `npm run dev`        | Start the development server     |
+| `npm run build`      | Production build                 |
+| `npm run start`      | Serve the production build       |
+| `npm run lint`       | ESLint                           |
+| `npm run typecheck`  | TypeScript, no emit              |
+| `npm test`           | Run the unit tests once          |
 | `npm run test:watch` | Run the unit tests in watch mode |
 
 ## Tests
@@ -146,13 +146,7 @@ or DOM fakes — contributions welcome.
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set
-up, what the checks are, and how to open a pull request. Participation is
-governed by our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-## Security
-
-Please report vulnerabilities privately rather than in a public issue — see
-[SECURITY.md](SECURITY.md).
+up, what the checks are, and how to open a pull request.
 
 ## License
 
