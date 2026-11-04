@@ -1,10 +1,7 @@
 # Contributing to Trackstar
 
 Thanks for taking an interest in Trackstar. Bug reports, ideas and pull requests
-are all welcome.
-
-By participating in this project you agree to abide by the
-[Code of Conduct](CODE_OF_CONDUCT.md).
+are all welcome. Please be respectful and assume good faith.
 
 ## Getting set up
 
@@ -28,10 +25,13 @@ point it at a real CouchDB instance.
 Run the same checks CI runs:
 
 ```bash
-npm run lint && npx tsc --noEmit && npm run build
+npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-All three must pass. CI will run them again on your branch.
+All four must pass. CI will run them again on your branch.
+
+While working on a change, `npm run test:watch` reruns the affected tests as you
+edit.
 
 ## Pull requests
 
@@ -40,6 +40,23 @@ All three must pass. CI will run them again on your branch.
 - Update the README when you add or rename an environment variable.
 - Commit messages loosely follow [Conventional Commits](https://www.conventionalcommits.org)
   (`feat:`, `fix:`, `docs:`, `ci:`). This is a convention, not a gate.
+
+## Tests
+
+Unit tests use [Vitest](https://vitest.dev) and live beside the code they cover
+as `src/lib/*.test.ts`.
+
+Please add tests for pure logic — parsing, validation, formatting, data mapping.
+If a bug fix is testable, a test that fails before the fix is the best way to
+describe it.
+
+Keep testable logic out of modules marked `'use server'`: that directive limits a
+module to async exports, so helpers there cannot be imported by a test. This is
+why form parsing lives in `src/lib/parse.ts` rather than `src/lib/actions.ts`.
+
+Modules that import `server-only` have no Node resolution outside the Next.js
+bundler; `vitest.config.ts` aliases it to an empty stub so those modules can be
+imported in tests.
 
 ## Code style
 
@@ -57,9 +74,6 @@ rest. A few conventions worth knowing:
 
 Open an issue using the bug report template and include what you expected, what
 happened, and how to reproduce it.
-
-**Security problems are different** — please do not open a public issue. Follow
-[SECURITY.md](SECURITY.md) instead.
 
 ## Never commit secrets
 
